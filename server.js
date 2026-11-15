@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));
-
+app.use(express.static(process.cwd()));
 app.use("/api", rateLimit({
   windowMs: 60 * 1000,
     limit: 30
@@ -148,4 +148,3 @@ app.use("/api", rateLimit({
                                                                                                                                                                                                                                                                                                                                                                                                                         app.listen(PORT, "0.0.0.0", () => {
                                                                                                                                                                                                                                                                                                                                                                                                                           console.log(`Genesis server running on port ${PORT}`);
                                                                                                                                                                                                                                                                                                                                                                                                                           });
-                                                                                                                                                                                                                                                                                                                                                                                                                          
