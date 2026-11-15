@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genesis AI Creation Studio</title>
+<style>
+:root{--bg:#0b1020;--panel:#141c30;--panel2:#1b2740;--text:#f4f6ff;--muted:#9ba9c5;--accent:#8b7cff;--line:#293650}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+header{padding:18px 5%;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{font-size:21px;font-weight:800;letter-spacing:1px}.logo span{color:var(--accent)}
+.status{font-size:12px;color:#f4c978;background:#352c20;padding:8px 12px;border-radius:20px}
+main{max-width:1100px;margin:auto;padding:28px 18px}
+h1{font-size:clamp(27px,5vw,42px);margin:10px 0}
+p{color:var(--muted);line-height:1.6}
+.tabs{display:flex;gap:10px;margin:25px 0;flex-wrap:wrap}
+button{border:0;border-radius:9px;padding:11px 16px;background:var(--accent);color:white;font-weight:700;cursor:pointer}
+button.secondary{background:var(--panel2);border:1px solid var(--line)}
+button.danger{background:#642d3b}
+button:disabled{opacity:.5}
+.panel,.agent,.chatbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.agent h3{margin:5px 0}.agent p{font-size:13px;min-height:40px}
+.tag{font-size:11px;color:#c2baff;background:#29254c;padding:5px 9px;border-radius:20px}
+input,textarea,select{width:100%;padding:12px;background:#0d1528;color:white;border:1px solid var(--line);border-radius:9px;margin:7px 0 14px;font:inherit}
+textarea{min-height:100px;resize:vertical}
+label{font-size:13px;color:var(--muted)}
+.hidden{display:none!important}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.messages{height:260px;overflow:auto;padding:10px;background:#0d1528;border-radius:10px;margin:12px 0}
+.msg{padding:10px 12px;border-radius:10px;background:var(--panel2);margin:8px 0;max-width:90%;line-height:1.5}
+.msg.user{margin-left:auto;background:#39336d}
+.small{font-size:12px;color:var(--muted)}
+footer{text-align:center;padding:30px;color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">GENESIS<span>✦</span></div>
+  <div class="status">AI API: Not connected</div>
+  </header>
+  <main>
+   <p>YOUR IDEAS. YOUR AGENTS. YOUR CREATION.</p>
+    <h1>Build something extraordinary.</h1>
+     <p>Meet your personal AI development team. Design, plan, build and test applications from one creative workspace.</p>
+
+      <div class="tabs">
+        <button onclick="showTab('agents')">Agent Studio</button>
+          <button class="secondary" onclick="showTab('chat')">AI Workspace</button>
+            <button class="secondary" onclick="showTab('build')">App Builder</button>
+             </div>
+
+              <section id="agents">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+                   <div><h2>Your AI Agents</h2><p>Create and configure your own specialist assistants.</p></div>
+                      <button onclick="newAgent()">+ Create Agent</button>
+                        </div>
+                          <div id="agentGrid" class="grid"></div>
+                            <div id="editor" class="panel hidden" style="margin-top:18px">
+                               <h2 id="editorTitle">Create Agent</h2>
+                                  <label>Agent name</label><input id="agentName" placeholder="e.g. Genesis Researcher">
+                                     <label>Role / speciality</label><input id="agentRole" placeholder="e.g. Research and analysis">
+                                        <label>Personality and instructions</label><textarea id="agentInstructions" placeholder="Describe what this agent should do, how it should behave, and its rules."></textarea>
+                                           <div class="actions">
+                                               <button onclick="saveAgent()">Save Agent</button>
+                                                   <button class="secondary" onclick="closeEditor()">Cancel</button>
+                                                      </div>
+                                                        </div>
+                                                         </section>
+
+                                                          <section id="chat" class="hidden">
+                                                            <h2>Genesis AI Workspace</h2>
+                                                              <p>Choose one of your custom agents and prepare a task.</p>
+                                                                <div class="chatbox">
+                                                                   <label>Select agent</label><select id="chatAgent"></select>
+                                                                      <div class="messages" id="messages">
+                                                                          <div class="msg">Welcome to Genesis. Your agents are ready to be configured. Connect the AI backend to begin real conversations.</div>
+                                                                             </div>
+                                                                                <label>Your message</label>
+                                                                                   <textarea id="chatInput" placeholder="Describe what you want your agent to do..."></textarea>
+                                                                                      <button onclick="sendMessage()">Send task</button>
+                                                                                         <p class="small" id="chatNotice">Real AI responses require a connected backend and API key.</p>
+                                                                                           </div>
+                                                                                            </section>
+
+                                                                                             <section id="build" class="hidden">
+                                                                                               <h2>App Builder</h2>
+                                                                                                 <p>Describe the application you want Genesis to help you create.</p>
+                                                                                                   <div class="panel">
+                                                                                                      <label>Application name</label>
+                                                                                                         <input id="projectName" placeholder="e.g. My Dream App">
+                                                                                                            <label>Describe your idea</label>
+                                                                                                               <textarea id="projectIdea" placeholder="What should your app do? Who is it for? What features should it have?"></textarea>
+                                                                                                                  <button onclick="prepareProject()">Prepare Project Brief</button>
+                                                                                                                     <div id="projectOutput" class="small" style="margin-top:15px"></div>
+                                                                                                                       </div>
+                                                                                                                        </section>
+                                                                                                                        </main>
+                                                                                                                        <footer>GENESIS AI CREATION STUDIO · YOUR IDEAS, UNLIMITED POSSIBILITIES</footer>
+
+                                                                                                                        <script>
+                                                                                                                        const defaults=[
+                                                                                                                        {name:"Genesis Core",role:"Orchestration",instructions:"Coordinate the specialist agents and organise tasks."},
+                                                                                                                        {name:"Genesis Architect",role:"Application planning",instructions:"Turn ideas into detailed application plans and technical requirements."},
+                                                                                                                        {name:"Genesis Coder",role:"Code development",instructions:"Write, explain and improve application code."},
+                                                                                                                        {name:"Genesis Designer",role:"UI and UX design",instructions:"Create intuitive, accessible and beautiful user experiences."},
+                                                                                                                        {name:"Genesis Tester",role:"Testing and debugging",instructions:"Identify bugs, test features and recommend fixes."}
+                                                                                                                        ];
+                                                                                                                        let agents=JSON.parse(localStorage.getItem("genesisAgents")||"null")||defaults;
+                                                                                                                        let editing=-1;
+
+                                                                                                                        function persist(){localStorage.setItem("genesisAgents",JSON.stringify(agents));render();}
+                                                                                                                        function render(){
+                                                                                                                         document.getElementById("agentGrid").innerHTML=agents.map((a,i)=>`
+                                                                                                                          <div class="agent">
+                                                                                                                            <span class="tag">${escapeHTML(a.role)}</span>
+                                                                                                                              <h3>${escapeHTML(a.name)}</h3>
+                                                                                                                                <p>${escapeHTML(a.instructions)}</p>
+                                                                                                                                  <div class="actions">
+                                                                                                                                     <button class="secondary" onclick="editAgent(${i})">Edit</button>
+                                                                                                                                        <button class="danger" onclick="deleteAgent(${i})">Delete</button>
+                                                                                                                                          </div>
+                                                                                                                                           </div>`).join("");
+                                                                                                                                            document.getElementById("chatAgent").innerHTML=agents.map((a,i)=>`<option value="${i}">${escapeHTML(a.name)}</option>`).join("");
+                                                                                                                                            }
+                                                                                                                                            function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+                                                                                                                                            function showTab(id){["agents","chat","build"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id));}
+                                                                                                                                            function newAgent(){editing=-1;document.getElementById("editorTitle").textContent="Create Agent";["agentName","agentRole","agentInstructions"].forEach(x=>document.getElementById(x).value="");document.getElementById("editor").classList.remove("hidden");}
+                                                                                                                                            function editAgent(i){editing=i;let a=agents[i];document.getElementById("editorTitle").textContent="Edit Agent";document.getElementById("agentName").value=a.name;document.getElementById("agentRole").value=a.role;document.getElementById("agentInstructions").value=a.instructions;document.getElementById("editor").classList.remove("hidden");}
+                                                                                                                                            function closeEditor(){document.getElementById("editor").classList.add("hidden");}
+                                                                                                                                            function saveAgent(){
+                                                                                                                                             let name=document.getElementById("agentName").value.trim(),role=document.getElementById("agentRole").value.trim(),instructions=document.getElementById("agentInstructions").value.trim();
+                                                                                                                                              if(!name||!role||!instructions){alert("Please complete all fields.");return;}
+                                                                                                                                               let a={name,role,instructions};if(editing<0)agents.push(a);else agents[editing]=a;
+                                                                                                                                                persist();closeEditor();
+                                                                                                                                                }
+                                                                                                                                                function deleteAgent(i){if(confirm("Delete "+agents[i].name+"?")){agents.splice(i,1);persist();}}
+                                                                                                                                                function sendMessage(){
+                                                                                                                                                 let input=document.getElementById("chatInput"),message=input.value.trim();if(!message)return;
+                                                                                                                                                  let box=document.getElementById("messages"),agent=agents[Number(document.getElementById("chatAgent").value)];
+                                                                                                                                                   box.innerHTML+=`<div class="msg user">${escapeHTML(message)}</div><div class="msg">Task received for <b>${escapeHTML(agent.name)}</b>. The AI backend is not connected yet, so this workspace cannot generate a real AI response. Your task has not been processed.</div>`;
+                                                                                                                                                    input.value="";box.scrollTop=box.scrollHeight;
+                                                                                                                                                    }
+                                                                                                                                                    function prepareProject(){
+                                                                                                                                                     let name=document.getElementById("projectName").value.trim(),idea=document.getElementById("projectIdea").value.trim();
+                                                                                                                                                      if(!name||!idea){alert("Enter an app name and describe your idea.");return;}
+                                                                                                                                                       document.getElementById("projectOutput").textContent="Project brief: "+name+". Goal: "+idea+" — Ready for the Genesis Architect agent once the AI backend is connected.";
+                                                                                                                                                       }
+                                                                                                                                                       render();
+                                                                                                                                                       </script>
+                                                                                                                                                       </body>
+                                                                                                                                                       </html>
+                                                                                                                                                       
