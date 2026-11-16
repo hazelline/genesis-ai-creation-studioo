@@ -137,12 +137,58 @@ footer{text-align:center;padding:30px;color:var(--muted);font-size:12px}
                                                                                                                                                 persist();closeEditor();
                                                                                                                                                 }
                                                                                                                                                 function deleteAgent(i){if(confirm("Delete "+agents[i].name+"?")){agents.splice(i,1);persist();}}
-                                                                                                                                                function sendMessage(){
-                                                                                                                                                 let input=document.getElementById("chatInput"),message=input.value.trim();if(!message)return;
-                                                                                                                                                  let box=document.getElementById("messages"),agent=agents[Number(document.getElementById("chatAgent").value)];
-                                                                                                                                                   box.innerHTML+=`<div class="msg user">${escapeHTML(message)}</div><div class="msg">Task received for <b>${escapeHTML(agent.name)}</b>. The AI backend is not connected yet, so this workspace cannot generate a real AI response. Your task has not been processed.</div>`;
-                                                                                                                                                    input.value="";box.scrollTop=box.scrollHeight;
-                                                                                                                                                    }
+                                                                                                                                                
+                                                                                                                                                async function sendMessage(){
+                                                                                                                                                  const input = document.getElementById("chatInput");
+                                                                                                                                                    const message = input.value.trim();
+
+                                                                                                                                                      if (!message) return;
+
+                                                                                                                                                        const box = document.getElementById("messages");
+                                                                                                                                                          const agent = agents[Number(
+                                                                                                                                                              document.getElementById("chatAgent").value
+                                                                                                                                                                )];
+
+                                                                                                                                                                  if (!agent) {
+                                                                                                                                                                      alert("Please select an agent.");
+                                                                                                                                                                          return;
+                                                                                                                                                                            }
+
+                                                                                                                                                                              box.innerHTML += `
+                                                                                                                                                                                  <div class="msg user">${escapeHTML(message)}</div>
+                                                                                                                                                                                      <div class="msg">Genesis is contacting ${escapeHTML(agent.name)}...</div>
+                                                                                                                                                                                        `;
+
+                                                                                                                                                                                          input.value = "";
+                                                                                                                                                                                            box.scrollTop = box.scrollHeight;
+
+                                                                                                                                                                                              try {
+                                                                                                                                                                                                  const response = await fetch(`${GENESIS_API}/api/chat`, {
+                                                                                                                                                                                                        method: "POST",
+                                                                                                                                                                                                              headers: {
+                                                                                                                                                                                                                      "Content-Type": "application/json"
+                                                                                                                                                                                                                            },
+                                                                                                                                                                                                                                  body: JSON.stringify({
+                                                                                                                                                                                                                                          agentId: agent.id,
+                                                                                                                                                                                                                                                  message
+                                                                                                                                                                                                                                                        })
+                                                                                                                                                                                                                                                            });
+
+                                                                                                                                                                                                                                                                const data = await response.json();
+
+                                                                                                                                                                                                                                                                    const reply = response.ok
+                                                                                                                                                                                                                                                                          ? data.reply
+                                                                                                                                                                                                                                                                                : data.error || "Genesis encountered an error.";
+
+                                                                                                                                                                                                                                                                                    box.lastElementChild.textContent = reply;
+
+                                                                                                                                                                                                                                                                                      } catch (error) {
+                                                                                                                                                                                                                                                                                          box.lastElementChild.textContent =
+                                                                                                                                                                                                                                                                                                "Unable to reach Genesis. Please try again.";
+                                                                                                                                                                                                                                                                                                  }
+
+                                                                                                                                                                                                                                                                                                    box.scrollTop = box.scrollHeight;
+                                                                                                                                                                                                                                                                                                   }
                                                                                                                                                     function prepareProject(){
                                                                                                                                                      let name=document.getElementById("projectName").value.trim(),idea=document.getElementById("projectIdea").value.trim();
                                                                                                                                                       if(!name||!idea){alert("Enter an app name and describe your idea.");return;}
