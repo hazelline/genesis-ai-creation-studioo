@@ -13,7 +13,6 @@ app.use(cors({
               "http://localhost:3000"
                 ]
                 }));
-}))
 app.use(express.json({ limit: "1mb" }));
 app.use("/api", rateLimit({
   windowMs: 60 * 1000,
