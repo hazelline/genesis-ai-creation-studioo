@@ -7,7 +7,13 @@ import OpenAI from "openai";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({
+      origin: [
+          "https://hazelline.github.io",
+              "http://localhost:3000"
+                ]
+                }));
+}))
 app.use(express.json({ limit: "1mb" }));
 app.use("/api", rateLimit({
   windowMs: 60 * 1000,
