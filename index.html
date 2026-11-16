@@ -39,7 +39,7 @@ footer{text-align:center;padding:30px;color:var(--muted);font-size:12px}
 <body>
 <header>
  <div class="logo">GENESIS<span>✦</span></div>
-  <div class="status">AI API: Not connected</div>
+  <div class="status" id="apiStatus">Checking AI connection...</div>
   </header>
   <main>
    <p>YOUR IDEAS. YOUR AGENTS. YOUR CREATION.</p>
@@ -51,7 +51,6 @@ footer{text-align:center;padding:30px;color:var(--muted);font-size:12px}
           <button class="secondary" onclick="showTab('chat')">AI Workspace</button>
             <button class="secondary" onclick="showTab('build')">App Builder</button>
              </div>
-
               <section id="agents">
                 <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
                    <div><h2>Your AI Agents</h2><p>Create and configure your own specialist assistants.</p></div>
@@ -212,6 +211,21 @@ footer{text-align:center;padding:30px;color:var(--muted);font-size:12px}
                                                                                                                                                                        } catch (error) {
                                                                                                                                                                            console.error("Genesis connection error:", error);
                                                                                                                                                                                return null;
+                                                                                                                                                                                 }
+                                                                                                                                                                                 async function updateGenesisStatus() {
+                                                                                                                                                                                      const badge = document.getElementById("apiStatus");
+                                                                                                                                                                                          const health = await checkGenesisBackend();
+
+                                                                                                                                                                                              if (health && health.aiConnected) {
+                                                                                                                                                                                                      badge.textContent = "AI API: Connected";
+                                                                                                                                                                                                              badge.style.color = "#86efac";
+                                                                                                                                                                                                                      badge.style.background = "#16432c";
+                                                                                                                                                                                                                          } else {
+                                                                                                                                                                                                                                  badge.textContent = "AI API: Offline";
+                                                                                                                                                                                                                                      }
+                                                                                                                                                                                                                                      }
+
+                                                                                                                                                                                                                                      updateGenesisStatus();
                                                                                                                                                                                  }
                                                                                                                                                                                  } </script>
 
