@@ -149,7 +149,20 @@ footer{text-align:center;padding:30px;color:var(--muted);font-size:12px}
                                                                                                                                                        document.getElementById("projectOutput").textContent="Project brief: "+name+". Goal: "+idea+" — Ready for the Genesis Architect agent once the AI backend is connected.";
                                                                                                                                                        }
                                                                                                                                                        render();
-                                                                                                                                                       </script>
+                                                                                                                                                       </script> 
+                                                                                                                                                       const GENESIS_API = "https://genesis-ai-creation-studioo.onrender.com";
+
+                                                                                                                                                       async function checkGenesisBackend() {
+                                                                                                                                                         try {
+                                                                                                                                                             const response = await fetch(`${GENESIS_API}/api/health`);
+                                                                                                                                                                 if (!response.ok) throw new Error("Backend unavailable");
+                                                                                                                                                                     return await response.json();
+                                                                                                                                                                       } catch (error) {
+                                                                                                                                                                           console.error("Genesis connection error:", error);
+                                                                                                                                                                               return null;
+                                                                                                                                                                                 }
+                                                                                                                                                                                 }
+
                                                                                                                                                        </body>
                                                                                                                                                        </html>
                                                                                                                                                        
